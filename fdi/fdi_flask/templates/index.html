@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>⚡ FDI 检测系统仪表盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap & Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #111;
+            color: #eee;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 20px;
+        }
+        .card {
+            background-color: #1c1c1e;
+            border-radius: 12px;
+            box-shadow: 0 0 10px #222;
+            margin-bottom: 20px;
+        }
+        .badge-attack {
+            background-color: #dc3545;
+        }
+        .badge-normal {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <h2 class="text-center mb-4">📡 FDI 检测系统监控面板</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>🔁 实时检测日志</h5>
+                <table class="table table-dark table-sm table-bordered align-middle text-center" id="log-table">
+                    <thead>
+                        <tr><th>时间</th><th>J 值</th><th>阈值</th><th>结果</th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>📈 J 值变化趋势</h5>
+                <canvas id="chartJ" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.min.js"></script>
+<script>
+let chart = new Chart(document.getElementById("chartJ"), {
+    type: "line",
+    data: {
+        labels: [],
+        datasets: [{
+            label: "J值",
+            data: [],
+            borderColor: "#0dcaf0",
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+
+async function loadLogs() {
+    const res = await fetch("/api/logs");
+    const data = await res.json();
+    const tbody = document.querySelector("#log-table tbody");
+    tbody.innerHTML = "";
+    chart.data.labels = [];
+    chart.data.datasets[0].data = [];
+
+    data.slice(-20).reverse().forEach(row => {
+        const tr = document.createElement("tr");
+        const badge = row.result === "ATTACK"
+            ? '<span class="badge badge-attack">ATTACK</span>'
+            : '<span class="badge badge-normal">NORMAL</span>';
+        tr.innerHTML = `<td>${row.timestamp}</td>
+                        <td>${row.J}</td>
+                        <td>${row.threshold}</td>
+                        <td>${badge}</td>`;
+        tbody.appendChild(tr);
+        chart.data.labels.unshift(row.timestamp.split(" ")[1]);
+        chart.data.datasets[0].data.unshift(parseFloat(row.J));
+    });
+    chart.update();
+}
+
+setInterval(loadLogs, 2000);
+loadLogs();
+</script>
+</body>
+</html>
