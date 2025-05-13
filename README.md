@@ -1,7 +1,7 @@
 # FDI 检测系统仓库说明
 
 ## 一、项目概述
-本仓库实现了一个虚假数据注入（False Data Injection, FDI）检测系统，包含编码器、解码器以及一个用于展示检测结果的 Web 界面。编码器生成合成测量值并进行编码，解码器接收编码数据进行解码和 FDI 检测，Web 界面实时展示检测日志和 J 值变化趋势。
+本仓库实现了一个虚假数据注入（False Data Injection, FDI）检测系统，包含编码器、解码器以及一个用于展示检测结果的 Web 界面。编码器生成合成测量值并进行编码，解码器接收编码数据进行解码和 FDI 检测，Web 界面实时展示检测日志和 J 值变化趋势。算法基于论文呢"Optimal Coding Schemes for Detecting False Data Injection Attacks in Power System State Estimation "中的检测算法，并使用线性同余伪随机进行测量编码。
 
 ## 二、仓库结构
 ```plaintext
@@ -95,3 +95,6 @@ python3 encoder_a.py --ip <解码器 IP 地址> --port 12345 --seed 42 --attack 
 - 编码器和解码器必须使用相同的种子，以确保生成相同的对角矩阵。
 - 项目中的模型数据文件（`model/*.npy`）是为 14 - 总线示例保存的，实际使用时可根据需要替换。
 - 日志文件 `monitor_log.csv` 记录了每次检测的时间、J 值、阈值和检测结果。
+
+## 七、鸣谢
+- 特别感谢刘臣胜教授、朱远明教授对本研究的大力支持 ！
