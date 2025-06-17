@@ -1,7 +1,7 @@
 # FDI 检测系统仓库说明
 
 ## 一、项目概述
-本仓库实现了一个虚假数据注入（False Data Injection, FDI）检测系统，包含编码器、解码器以及一个用于展示检测结果的 Web 界面。编码器生成合成测量值并进行编码，解码器接收编码数据进行解码和 FDI 检测，Web 界面实时展示检测日志和 J 值变化趋势。算法基于论文呢"Optimal Coding Schemes for Detecting False Data Injection Attacks in Power System State Estimation "中的检测算法，并使用线性同余伪随机进行测量编码。
+本仓库实现了一个虚假数据注入（False Data Injection, FDI）检测系统，包含编码器、解码器以及一个用于展示检测结果的 Web 界面。编码器生成合成测量值并进行编码，解码器接收编码数据进行解码和 FDI 检测，Web 界面实时展示检测日志和 J 值变化趋势。算法基于论文"Optimal Coding Schemes for Detecting False Data Injection Attacks in Power System State Estimation "中的检测算法，并使用线性同余伪随机进行测量编码。
 
 ## 二、仓库结构
 ```plaintext
